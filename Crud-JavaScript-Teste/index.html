@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CRUD</title>
+  <link rel="stylesheet" href="style.css">
+  <link href='https://unpkg.com/boxicons@2.1.1/css/boxicons.min.css' rel='stylesheet'>
+</head>
+
+<body>
+  <div class="container">
+    <div class="header">
+      <span>Listagem de Arquivos</span>
+      <!--<button onclick="openModal()" id="new">Incluir</i></button>-->
+    </div>
+
+    <div class="modal">
+      <form>
+        <label for="m-nomeArquivo">Nome</label>
+        <input id="m-nomeArquivo" type="text"/>
+
+        <label for="m-dataInicial">Data Inicial</label>
+        <input id="m-dataInicial" type="date"/>
+
+        <label for="m-dataFinal">Data Final</label>
+        <input id="m-dataFinal" type="date"/>
+
+        <label for="m-tipo">Tipo Arquivo</label>
+        <select id="m-tipoArquivo" onchange="atualizouSelect()">
+          <option value="" selected>TODOS</option>
+          <option value="REM">REM</option>
+          <option value="RET">RET</option>
+        </select>
+      </form>
+      <button id="btnPesquisar" onclick="pesquisarArqvuivos()">Pesquisar</button>
+    </div>
+
+    <div class="divTable">
+      <table id="listArquivos">
+        <thead>
+          <tr>
+            <th>Banco</th>
+            <th>Tipo</th>
+            <th>Arquivo</th>
+            <th>Dt. Geração</th>
+            <th>Gerador Por</th>
+            <th>Dt. Envio</th>
+            <th>Qtd. Linhas</th>
+            <th>Vlr. Total</th>
+            <th class="acao">Editar</th>
+            <th class="acao">Excluir</th>
+          </tr>
+        </thead>
+        <tbody>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="modal-container">
+      <div class="modal">
+        <form>
+          <label for="m-banco">Banco</label>
+          <input id="m-banco" type="text" required />
+  
+          <label for="m-tipo">Tipo</label>
+          <input id="m-tipo" type="text" required />
+
+          <label for="m-arquivo">Arquivo</label>
+          <input id="m-arquivo" type="text" required />
+
+          <label for="m-dtGeracao">Data Geração</label>
+          <input id="m-dtGeracao" type="text" required />
+
+          <label for="m-usuarioGeracao">Gerado Por</label>
+          <input id="m-usuarioGeracao" type="text" required />
+
+          <label for="m-dtEnvio">Data Envio</label>
+          <input id="m-dtEnvio" type="text" required />
+
+          <label for="m-qtdLinhas">Qtd. Linhas</label>
+          <input id="m-qtdLinhas" type="text" required />
+  
+          <label for="m-vlrTotal">Valor Total</label>
+          <input id="m-vlrTotal" type="number" required />
+
+          <button id="btnSalvar">Salvar</button>
+        </form>
+      </div>
+    </div>
+
+  </div>
+  <script src="script.js"></script>
+</body>
+
+</html>
