@@ -1,0 +1,15 @@
+{
+    "configurations": [
+        {
+            "type": "java",
+            "name": "Spring Boot-CrudSpringTesteApplication<crud-spring-teste>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "console": "internalConsole",
+            "mainClass": "com.teste.crudspringteste.CrudSpringTesteApplication",
+            "projectName": "crud-spring-teste",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        }
+    ]
+}
