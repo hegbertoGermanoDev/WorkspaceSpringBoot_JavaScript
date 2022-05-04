@@ -5,6 +5,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -62,6 +63,8 @@ public class ArquivoController {
      */
     @PostMapping(path = "/listFiltros")
     public List<Arquivo> listFiltros(@RequestBody ArquivoVO arquivoVO) {
+        String dataInicial = arquivoVO.getDataInicial().getYear() +"-"+arquivoVO.getDataInicial().getMonth()+"-"+arquivoVO.getDataInicial().getDate()+"00:00:00";
+        String dataFinal = arquivoVO.getDataFinal().getYear() +"-"+arquivoVO.getDataFinal().getMonth()+"-"+arquivoVO.getDataFinal().getDate()+"23:59:59";
         return arquivoRepository.findByConsulta(arquivoVO.getTipo(), arquivoVO.getNomeArqvuivo(), arquivoVO.getDataInicial(), arquivoVO.getDataFinal());
     }
 
@@ -94,8 +97,8 @@ public class ArquivoController {
         
         arquivoSave.setNomeArquivo(arquivo.getOriginalFilename());
         arquivoSave.setBanco("BRADESCO");
-        arquivoSave.setDtEnvio(new Date());
-        arquivoSave.setDtGeracao(new Date());
+        arquivoSave.setDtEnvio(new Timestamp(new Date().getTime()));
+        arquivoSave.setDtGeracao(new Timestamp(new Date().getTime()));
         
         /*Contagem de linhas do arquivo*/
         Scanner sc = new Scanner(arquivo.getInputStream());

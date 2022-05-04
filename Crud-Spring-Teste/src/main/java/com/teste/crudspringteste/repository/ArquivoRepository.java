@@ -14,7 +14,7 @@ public interface ArquivoRepository extends JpaRepository<Arquivo, Long> {
     
     List<Arquivo> findByNomeArquivo(String nomeArquivo);
 
-    @Query(nativeQuery = true, value = "Select * From Arquivo a Where a.tipo = ?1")
+    @Query(nativeQuery = true, value = "Select * From Arquivo a Where a.dt_geracao between ?3 and ?4")
     List<Arquivo> findByConsulta(String tipo, String nomeArquivo, Date dataInicial, Date dataFinal);
 
 }
