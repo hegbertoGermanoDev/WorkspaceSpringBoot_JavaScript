@@ -6,6 +6,7 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
@@ -14,6 +15,7 @@ import javax.sql.rowset.serial.SerialException;
 
 import com.teste.crudspringteste.model.Arquivo;
 import com.teste.crudspringteste.model.ArquivoVO;
+import com.teste.crudspringteste.repository.ArquivoCustomRepository;
 import com.teste.crudspringteste.repository.ArquivoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +39,9 @@ public class ArquivoController {
     @Autowired
     private ArquivoRepository arquivoRepository;
 
+    @Autowired
+    private ArquivoCustomRepository arquivoCustomRepository;
+
     /**
      * 
      * @return toda a listagem de arquivos
@@ -50,10 +55,16 @@ public class ArquivoController {
      * @GET
      * @return listagem de arquivos por filtros preenchidos na url
      */
-    @GetMapping(path = "/listFiltros/{tipo}/{nomeArquivo}/{dataInicial}/{dataFinal}")
-    public List<Arquivo> listFiltros(@RequestParam String tipo, @RequestParam String nomeArquivo, @RequestParam Date dataInicial, @RequestParam Date dataFinal) {
-        //return arquivoRepository.findByConsulta(tipo, nomeArquivo, dataInicial, dataFinal);
-        return null;
+    @GetMapping(path = "/listFiltros")
+    public List<Arquivo> listFiltros(@RequestParam String tipo,
+                                     @RequestParam String nomeArquivo,
+                                     @RequestParam String dataInicial,
+                                     @RequestParam String dataFinal) {
+        if ((dataInicial != null && dataFinal != null) && (dataInicial != "" && dataFinal != "")) {
+            dataInicial = dataInicial + " 00:00:00";
+            dataFinal = dataFinal + " 23:59:59";
+        }
+        return arquivoCustomRepository.listArquivoByFiltros(tipo, nomeArquivo, dataInicial, dataFinal);
     }
 
     /**
@@ -63,9 +74,14 @@ public class ArquivoController {
      */
     @PostMapping(path = "/listFiltros")
     public List<Arquivo> listFiltros(@RequestBody ArquivoVO arquivoVO) {
-        String dataInicial = arquivoVO.getDataInicial().getYear() +"-"+arquivoVO.getDataInicial().getMonth()+"-"+arquivoVO.getDataInicial().getDate()+"00:00:00";
-        String dataFinal = arquivoVO.getDataFinal().getYear() +"-"+arquivoVO.getDataFinal().getMonth()+"-"+arquivoVO.getDataFinal().getDate()+"23:59:59";
-        return arquivoRepository.findByConsulta(arquivoVO.getTipo(), arquivoVO.getNomeArqvuivo(), arquivoVO.getDataInicial(), arquivoVO.getDataFinal());
+        SimpleDateFormat formatoData = new SimpleDateFormat("yyyy-MM-dd");
+        String dataInicial = null;
+        String dataFinal = null;
+        if (arquivoVO.getDataInicial() != null && arquivoVO.getDataFinal() != null){
+            dataInicial = formatoData.format(arquivoVO.getDataInicial());
+            dataFinal = formatoData.format(arquivoVO.getDataFinal());
+        }
+        return arquivoCustomRepository.listArquivoByFiltros(arquivoVO.getTipo(), arquivoVO.getNomeArqvuivo(), dataInicial + " 00:00:00", dataFinal + " 23:59:59");
     }
 
     /**

@@ -89,10 +89,28 @@ function insertItem(item, index) {
   tbody.appendChild(tr)
 }
 
-function pesquisarArqvuivos() {
+function pesquisarArqvuivosGet() {
   deleteItem(-1);
   atualizouSelect();
-  console.log('Dados da pesquisa: ' + 'Tipo: ' + sTipo.value + ', Nome Arquivo: ' + sNomeArquivo.value + ', Data Inicial: ' + sDataInicial.value + ', Data Final: ' + sDataFinal.value)
+  console.log('URL GET: ' + `http://localhost:8080/api/arquivo/listFiltros/?tipo=${sTipo.value}&nomeArquivo=${sNomeArquivo.value}&dataInicial=${sDataInicial.value}&dataFinal=${sDataFinal.value}`)
+  fetch(`http://localhost:8080/api/arquivo/listFiltros/?tipo=${sTipo.value}&nomeArquivo=${sNomeArquivo.value}&dataInicial=${sDataInicial.value}&dataFinal=${sDataFinal.value}`)
+  .then(response => response.json())
+  .then(data => {
+    data.forEach((item, index) => {
+      let dataGeracaoFormat = new Date(item.dtGeracao)
+      item.dtGeracao = (dataGeracaoFormat.getDate()) + "/" + (dataGeracaoFormat.getMonth() + 1) + "/" + dataGeracaoFormat.getFullYear()
+      let dataEnvioFormat = new Date(item.dtEnvio)
+      item.dtEnvio = (dataEnvioFormat.getDate()) + "/" + (dataEnvioFormat.getMonth() + 1) + "/" + dataEnvioFormat.getFullYear()
+      insertItem(item, index)
+    })
+  })
+  limparCamposPesquisa();
+}
+
+function pesquisarArqvuivosPost() {
+  deleteItem(-1);
+  atualizouSelect();
+  console.log('Dados da pesquisa POST: ' + 'Tipo: ' + sTipo.value + ', Nome Arquivo: ' + sNomeArquivo.value + ', Data Inicial: ' + sDataInicial.value + ', Data Final: ' + sDataFinal.value)
   fetch(`http://localhost:8080/api/arquivo/listFiltros`,{
       headers: {
         'Accept': 'application/json',
@@ -117,13 +135,20 @@ function pesquisarArqvuivos() {
       insertItem(item, index)
     })
   })
-    
+  limparCamposPesquisa();
 }
 
 function atualizouSelect() {
   let select = document.querySelector('#m-tipoArquivo');
   let optionValue = select.options[select.selectedIndex];
   sTipo.value = optionValue.value;
+}
+
+function limparCamposPesquisa() {
+  document.querySelector('#m-tipoArquivo').value = '';
+  sNomeArquivo.value = '';
+  sDataInicial.value = '';
+  sDataFinal.value = '';
 }
 
 btnSalvar.onclick = e => {
