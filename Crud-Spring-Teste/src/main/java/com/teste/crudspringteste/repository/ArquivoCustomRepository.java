@@ -3,14 +3,17 @@ package com.teste.crudspringteste.repository;
 import java.util.List;
 
 import javax.persistence.EntityManager;
+import javax.persistence.Query;
 
 import com.teste.crudspringteste.model.Arquivo;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class ArquivoCustomRepository {
     
+    @Autowired
     private final EntityManager entityManager;
 
     public ArquivoCustomRepository(EntityManager entityManager) {
@@ -45,6 +48,12 @@ public class ArquivoCustomRepository {
         }
 
         return q.getResultList();
+    }
+
+    public Arquivo getArquivoById(Long id) {
+        Query query = entityManager.createQuery("Select a.id, a.nomeArquivo From Arquivo a Where a.id = " + id);
+        Arquivo arq = (Arquivo) query.getSingleResult();
+        return arq;
     }
 
 }

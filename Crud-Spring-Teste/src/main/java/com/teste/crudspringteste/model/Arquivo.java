@@ -1,5 +1,6 @@
 package com.teste.crudspringteste.model;
 
+import java.sql.Blob;
 import java.sql.Timestamp;
 
 import javax.persistence.Column;
@@ -26,10 +27,10 @@ public class Arquivo {
 
     @Column
     private String nomeArquivo;
-    /*
+    
     @Column
     private Blob arquivo;
-    */
+    
     @Column
     private Timestamp dtGeracao;
 
@@ -77,7 +78,7 @@ public class Arquivo {
     public void setNomeArquivo(String nomeArquivo) {
         this.nomeArquivo = nomeArquivo;
     }
-    /*
+    
     public Blob getArquivo() {
         return this.arquivo;
     }
@@ -85,7 +86,7 @@ public class Arquivo {
     public void setArquivo(Blob arquivo) {
         this.arquivo = arquivo;
     }
-    */
+    
     public Timestamp getDtGeracao() {
         return this.dtGeracao;
     }

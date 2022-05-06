@@ -11,8 +11,10 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
+import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialException;
 
+import com.teste.crudspringteste.dao.ArquivoMapper;
 import com.teste.crudspringteste.model.Arquivo;
 import com.teste.crudspringteste.model.ArquivoVO;
 import com.teste.crudspringteste.repository.ArquivoCustomRepository;
@@ -42,13 +44,16 @@ public class ArquivoController {
     @Autowired
     private ArquivoCustomRepository arquivoCustomRepository;
 
+    @Autowired
+    ArquivoMapper arquivoMapper;
+
     /**
      * 
      * @return toda a listagem de arquivos
      */
     @GetMapping(path = "/list")
     public List<Arquivo> list() {
-        return arquivoRepository.findAll();
+        return arquivoMapper.getAllArquivos();
     }
 
     /**
@@ -64,7 +69,8 @@ public class ArquivoController {
             dataInicial = dataInicial + " 00:00:00";
             dataFinal = dataFinal + " 23:59:59";
         }
-        return arquivoCustomRepository.listArquivoByFiltros(tipo, nomeArquivo, dataInicial, dataFinal);
+        return arquivoMapper.listArquivosByFiltro(tipo, nomeArquivo, dataInicial, dataFinal);
+        //return arquivoCustomRepository.listArquivoByFiltros(tipo, nomeArquivo, dataInicial, dataFinal);
     }
 
     /**
@@ -82,6 +88,11 @@ public class ArquivoController {
             dataFinal = formatoData.format(arquivoVO.getDataFinal());
         }
         return arquivoCustomRepository.listArquivoByFiltros(arquivoVO.getTipo(), arquivoVO.getNomeArqvuivo(), dataInicial + " 00:00:00", dataFinal + " 23:59:59");
+    }
+
+    @GetMapping(path = "/getArquivoById")
+    public Arquivo getArqvuivoById(@RequestParam Long id) {
+        return arquivoCustomRepository.getArquivoById(id);
     }
 
     /**
@@ -108,8 +119,8 @@ public class ArquivoController {
         Path caminho = Paths.get(raizProjeto+"/arquivosUpload/"+arquivo.getOriginalFilename());
         Files.write(caminho, bytes);
         
-        //SerialBlob sBlob = new SerialBlob(arquivo.getBytes());
-        //arquivoSave.setArquivo(sBlob);
+        SerialBlob sBlob = new SerialBlob(arquivo.getBytes());
+        arquivoSave.setArquivo(sBlob);
         
         arquivoSave.setNomeArquivo(arquivo.getOriginalFilename());
         arquivoSave.setBanco("BRADESCO");

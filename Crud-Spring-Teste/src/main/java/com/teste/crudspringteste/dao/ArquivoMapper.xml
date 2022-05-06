@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.teste.crudspringteste.dao.ArquivoMapper">
+    <resultMap id="resultGetAllArquivos" type="arquivo">
+        <result property="id" column="id"/>
+        <result property="banco" column="banco"/>
+        <result property="tipo" column="tipo"/>
+        <result property="nomeArquivo" column="nome_arquivo"/>
+        <result property="dtGeracao" column="dt_geracao"/>
+        <result property="usuarioGeracao" column="usuario_geracao"/>
+        <result property="dtEnvio" column="dt_envio"/>
+        <result property="qtdLinhas" column="qtd_linhas"/>
+        <result property="vlrTotal" column="vlr_total"/>
+    </resultMap>
+    <select id="getAllArquivos" resultType="arquivo" resultMap="resultGetAllArquivos">
+        SELECT *
+          FROM arquivo
+    </select>
+    
+    <resultMap id="resultListArquivosByFiltro" type="arquivo">
+        <id property="nomeArquivo" column="nome_arquivo"/>
+        <id property="dtGeracao" column="dt_geracao"/>
+        <id property="tipo" column="tipo"/>
+        <result property="id" column="id"/>
+        <result property="banco" column="banco"/>
+        <result property="tipo" column="tipo"/>
+        <result property="nomeArquivo" column="nome_arquivo"/>
+        <result property="dtGeracao" column="dt_geracao"/>
+        <result property="usuarioGeracao" column="usuario_geracao"/>
+        <result property="dtEnvio" column="dt_envio"/>
+        <result property="qtdLinhas" column="qtd_linhas"/>
+        <result property="vlrTotal" column="vlr_total"/>
+    </resultMap>
+    <select id="listArquivosByFiltro" parameterType="" resultType="arquivo" resultMap="resultListArquivosByFiltro">
+        SELECT *
+          FROM arquivo a
+         WHERE 1 = 1
+        <if test="object.nomeArquivoLiked != null and object.nomeArquivoLiked != ''">
+           AND a.nome_arquivo = #{arquivo.nomeArquivo}
+        </if>
+        <if test="object.tipoLiked != null and object.tipoLiked != ''">
+            AND a.tipo = #{arquivo.tipo}
+        </if>
+    </select>
+</mapper>
