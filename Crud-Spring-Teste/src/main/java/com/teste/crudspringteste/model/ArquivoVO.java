@@ -2,6 +2,9 @@ package com.teste.crudspringteste.model;
 
 import java.util.Date;
 
+import lombok.Data;
+
+@Data
 public class ArquivoVO {
     private String tipo;
     private String nomeArquivo;

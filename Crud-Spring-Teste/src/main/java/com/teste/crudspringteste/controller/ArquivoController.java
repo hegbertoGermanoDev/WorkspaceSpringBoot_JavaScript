@@ -65,11 +65,27 @@ public class ArquivoController {
                                      @RequestParam String nomeArquivo,
                                      @RequestParam String dataInicial,
                                      @RequestParam String dataFinal) {
+        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
+        Date dtInicial = null;
+        Date dtFinal = null;
+        try {
+            dtInicial = format.parse(dataInicial);
+            dtFinal = format.parse(dataFinal);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        ArquivoVO arquivoVO = new ArquivoVO();
+        arquivoVO.setNomeArqvuivo(nomeArquivo);
+        arquivoVO.setTipo(tipo);
+        arquivoVO.setDataInicial(dtInicial);
+        arquivoVO.setDataFinal(dtFinal);
+        /*
         if ((dataInicial != null && dataFinal != null) && (dataInicial != "" && dataFinal != "")) {
             dataInicial = dataInicial + " 00:00:00";
             dataFinal = dataFinal + " 23:59:59";
         }
-        return arquivoMapper.listArquivosByFiltro(tipo, nomeArquivo, dataInicial, dataFinal);
+        */
+        return arquivoMapper.listArquivosByFiltro(arquivoVO);
         //return arquivoCustomRepository.listArquivoByFiltros(tipo, nomeArquivo, dataInicial, dataFinal);
     }
 
