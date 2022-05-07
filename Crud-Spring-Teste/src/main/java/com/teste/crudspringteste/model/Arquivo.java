@@ -1,7 +1,7 @@
 package com.teste.crudspringteste.model;
 
 import java.sql.Blob;
-import java.sql.Timestamp;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -32,13 +32,13 @@ public class Arquivo {
     private Blob arquivo;
     
     @Column
-    private Timestamp dtGeracao;
+    private Date dtGeracao;
 
     @Column
     private String usuarioGeracao;
 
     @Column
-    private Timestamp dtEnvio;
+    private Date dtEnvio;
     
     @Column
     private Integer qtdLinhas;
@@ -87,11 +87,11 @@ public class Arquivo {
         this.arquivo = arquivo;
     }
     
-    public Timestamp getDtGeracao() {
+    public Date getDtGeracao() {
         return this.dtGeracao;
     }
 
-    public void setDtGeracao(Timestamp dtGeracao) {
+    public void setDtGeracao(Date dtGeracao) {
         this.dtGeracao = dtGeracao;
     }
 
@@ -103,11 +103,11 @@ public class Arquivo {
         this.usuarioGeracao = usuarioGeracao;
     }
 
-    public Timestamp getDtEnvio() {
+    public Date getDtEnvio() {
         return this.dtEnvio;
     }
 
-    public void setDtEnvio(Timestamp dtEnvio) {
+    public void setDtEnvio(Date dtEnvio) {
         this.dtEnvio = dtEnvio;
     }
 

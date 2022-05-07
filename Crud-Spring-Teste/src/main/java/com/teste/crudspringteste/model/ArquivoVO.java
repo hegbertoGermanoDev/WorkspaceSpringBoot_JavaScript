@@ -1,15 +1,13 @@
 package com.teste.crudspringteste.model;
 
-import java.util.Date;
-
 import lombok.Data;
 
 @Data
 public class ArquivoVO {
     private String tipo;
     private String nomeArquivo;
-    private Date dataInicial;
-    private Date dataFinal;
+    private String dataInicial;
+    private String dataFinal;
 
     public String getTipo() {
         return this.tipo;
@@ -27,19 +25,19 @@ public class ArquivoVO {
         this.nomeArquivo = nomeArqvuivo;
     }
 
-    public Date getDataInicial() {
+    public String getDataInicial() {
         return this.dataInicial;
     }
 
-    public void setDataInicial(Date dataInicial) {
+    public void setDataInicial(String dataInicial) {
         this.dataInicial = dataInicial;
     }
 
-    public Date getDataFinal() {
+    public String getDataFinal() {
         return this.dataFinal;
     }
 
-    public void setDataFinal(Date dataFinal) {
+    public void setDataFinal(String dataFinal) {
         this.dataFinal = dataFinal;
     }
 

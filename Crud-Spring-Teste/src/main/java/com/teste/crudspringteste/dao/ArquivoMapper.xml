@@ -34,7 +34,7 @@
         <result property="qtdLinhas" column="qtd_linhas"/>
         <result property="vlrTotal" column="vlr_total"/>
     </resultMap>
-    <select id="listArquivosByFiltro" parameterType="com.teste.crudspringteste.model.ArquivoVO" resultMap="resultListArquivosByFiltro">
+    <select id="listArquivosByFiltro" parameterType="arquivoVO" resultMap="resultListArquivosByFiltro">
         SELECT *
           FROM arquivo a
          WHERE 1 = 1
@@ -44,9 +44,9 @@
         <if test="tipo != null and tipo != ''">
             AND a.tipo = #{tipo}
         </if>
-        <if test="(dataInicial != null and dataInicial != '') and (dataFinal != null and dataFinal != '')">
-            AND a.dt_geracao BETWEEN to_date(#{dataInicial,jdbcType=TIMESTAMP})
-            AND to_date(#{dataFinal,jdbcType=TIMESTAMP})
+        <if test="((dataInicial != null and dataFinal != null) and (dataInicial != '' and dataFinal != ''))">
+            AND to_char(trunc(a.dt_geracao),'dd/mm/yyyy')
+            BETWEEN to_char(#{dataInicial},'dd/mm/yyyy') AND to_char(#{dataFinal},'dd/mm/yyyy')
         </if>
     </select>
 </mapper>

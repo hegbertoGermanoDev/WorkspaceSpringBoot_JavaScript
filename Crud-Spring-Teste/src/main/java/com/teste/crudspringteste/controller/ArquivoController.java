@@ -5,7 +5,6 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -65,28 +64,12 @@ public class ArquivoController {
                                      @RequestParam String nomeArquivo,
                                      @RequestParam String dataInicial,
                                      @RequestParam String dataFinal) {
-        SimpleDateFormat format = new SimpleDateFormat("dd/MM/yyyy");
-        Date dtInicial = null;
-        Date dtFinal = null;
-        try {
-            dtInicial = format.parse(dataInicial);
-            dtFinal = format.parse(dataFinal);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         ArquivoVO arquivoVO = new ArquivoVO();
         arquivoVO.setNomeArqvuivo(nomeArquivo);
         arquivoVO.setTipo(tipo);
-        arquivoVO.setDataInicial(dtInicial);
-        arquivoVO.setDataFinal(dtFinal);
-        /*
-        if ((dataInicial != null && dataFinal != null) && (dataInicial != "" && dataFinal != "")) {
-            dataInicial = dataInicial + " 00:00:00";
-            dataFinal = dataFinal + " 23:59:59";
-        }
-        */
+        arquivoVO.setDataInicial(dataInicial);
+        arquivoVO.setDataFinal(dataFinal);
         return arquivoMapper.listArquivosByFiltro(arquivoVO);
-        //return arquivoCustomRepository.listArquivoByFiltros(tipo, nomeArquivo, dataInicial, dataFinal);
     }
 
     /**
@@ -140,8 +123,9 @@ public class ArquivoController {
         
         arquivoSave.setNomeArquivo(arquivo.getOriginalFilename());
         arquivoSave.setBanco("BRADESCO");
-        arquivoSave.setDtEnvio(new Timestamp(new Date().getTime()));
-        arquivoSave.setDtGeracao(new Timestamp(new Date().getTime()));
+        
+        arquivoSave.setDtEnvio(new Date());
+        arquivoSave.setDtGeracao(new Date());
         
         /*Contagem de linhas do arquivo*/
         Scanner sc = new Scanner(arquivo.getInputStream());
