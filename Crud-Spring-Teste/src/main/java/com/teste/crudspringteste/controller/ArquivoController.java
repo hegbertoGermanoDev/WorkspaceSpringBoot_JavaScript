@@ -105,7 +105,7 @@ public class ArquivoController {
      */
     @PostMapping(path = "/save")
     @ResponseStatus(HttpStatus.CREATED)
-    public Arquivo save(@RequestBody MultipartFile arquivo) throws IOException, SerialException, SQLException {
+    public Arquivo save(MultipartFile arquivo, String banco, String vlrTotal) throws IOException, SerialException, SQLException {
         int qtdLinhas = 0;
         String extensaoArq = "";
         Arquivo arquivoSave = new Arquivo();
@@ -120,7 +120,7 @@ public class ArquivoController {
         arquivoSave.setArquivo(arquivo.getBytes());
         
         arquivoSave.setNomeArquivo(arquivo.getOriginalFilename());
-        arquivoSave.setBanco("BRADESCO");
+        arquivoSave.setBanco(banco);
         
         arquivoSave.setDtEnvio(new Date());
         arquivoSave.setDtGeracao(new Date());
@@ -144,7 +144,8 @@ public class ArquivoController {
         arquivoSave.setTipo(extensaoArq);
 
         arquivoSave.setUsuarioGeracao("USUTESTE");
-        arquivoSave.setVlrTotal(1500.00);
+        vlrTotal = vlrTotal.replace(",", ".");
+        arquivoSave.setVlrTotal(Double.parseDouble(vlrTotal));
         return arquivoRepository.save(arquivoSave);
     }
 

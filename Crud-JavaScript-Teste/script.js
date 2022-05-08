@@ -6,6 +6,7 @@ const btnSalvar = document.querySelector('#btnSalvar')
 
 const sBanco = document.querySelector('#m-banco')
 const sTipo = document.querySelector('#m-tipo')
+const sTipoArquivo = document.querySelector('#m-tipoArquivo')
 const sNomeArquivo = document.querySelector('#m-nomeArquivo')
 const sArquivo = document.querySelector('#m-arquivo')
 const sDtGeracao = document.querySelector('#m-dtGeracao')
@@ -31,25 +32,25 @@ function openModal(edit = false, index = 0) {
 
   if (edit) {
     
-    sBanco.value = itens[index].banco
-    sTipo.value = itens[index].tipo
-    sArquivo.value = itens[index].arquivo
-    sDtGeracao.value = itens[index].dtGeracao
-    sUsuarioGeracao.value = itens[index].usuarioGeracao
-    sDtEnvio.value = itens[index].dtEnvio
-    sQtdLinhas.value = itens[index].qtdLinhas
-    sVlrTotal.value = itens[index].vlrTotal
+    //sBanco.value = itens[index].banco
+    //sTipo.value = itens[index].tipo
+    //sArquivo.value = itens[index].arquivo
+    //sDtGeracao.value = itens[index].dtGeracao
+    //sUsuarioGeracao.value = itens[index].usuarioGeracao
+    //sDtEnvio.value = itens[index].dtEnvio
+    //sQtdLinhas.value = itens[index].qtdLinhas
+    //sVlrTotal.value = itens[index].vlrTotal
 
     id = index
   } else {
     
     sBanco.value = ''
-    sTipo.value = ''
+    //sTipo.value = ''
     sArquivo.value = ''
-    sDtGeracao.value = ''
-    sUsuarioGeracao.value = ''
-    sDtEnvio.value = ''
-    sQtdLinhas.value = ''
+    //sDtGeracao.value = ''
+    //sUsuarioGeracao.value = ''
+    //sDtEnvio.value = ''
+    //sQtdLinhas.value = ''
     sVlrTotal.value = ''
   }
   
@@ -92,8 +93,8 @@ function insertItem(item, index) {
 function pesquisarArqvuivosGet() {
   deleteItem(-1);
   atualizouSelect();
-  console.log('URL GET: ' + `http://localhost:8080/api/arquivo/listFiltros/?tipo=${sTipo.value}&nomeArquivo=${sNomeArquivo.value}&dataInicial=${sDataInicial.value}&dataFinal=${sDataFinal.value}`)
-  fetch(`http://localhost:8080/api/arquivo/listFiltros/?tipo=${sTipo.value}&nomeArquivo=${sNomeArquivo.value}&dataInicial=${sDataInicial.value}&dataFinal=${sDataFinal.value}`)
+  console.log('URL GET: ' + `http://localhost:8080/api/arquivo/listFiltros/?tipo=${sTipoArquivo.value}&nomeArquivo=${sNomeArquivo.value}&dataInicial=${sDataInicial.value}&dataFinal=${sDataFinal.value}`)
+  fetch(`http://localhost:8080/api/arquivo/listFiltros/?tipo=${sTipoArquivo.value}&nomeArquivo=${sNomeArquivo.value}&dataInicial=${sDataInicial.value}&dataFinal=${sDataFinal.value}`)
   .then(response => response.json())
   .then(data => {
     data.forEach((item, index) => {
@@ -110,7 +111,7 @@ function pesquisarArqvuivosGet() {
 function pesquisarArqvuivosPost() {
   deleteItem(-1);
   atualizouSelect();
-  console.log('Dados da pesquisa POST: ' + 'Tipo: ' + sTipo.value + ', Nome Arquivo: ' + sNomeArquivo.value + ', Data Inicial: ' + sDataInicial.value + ', Data Final: ' + sDataFinal.value)
+  console.log('Dados da pesquisa POST: ' + 'Tipo: ' + sTipoArquivo.value + ', Nome Arquivo: ' + sNomeArquivo.value + ', Data Inicial: ' + sDataInicial.value + ', Data Final: ' + sDataFinal.value)
   fetch(`http://localhost:8080/api/arquivo/listFiltros`,{
       headers: {
         'Accept': 'application/json',
@@ -118,7 +119,7 @@ function pesquisarArqvuivosPost() {
       },
       method: "POST",
       body: JSON.stringify({
-        'tipo': sTipo.value,
+        'tipo': sTipoArquivo.value,
         'nomeArquivo': sNomeArquivo.value,
         'dataInicial': sDataInicial.value,
         'dataFinal': sDataFinal.value
@@ -141,7 +142,7 @@ function pesquisarArqvuivosPost() {
 function atualizouSelect() {
   let select = document.querySelector('#m-tipoArquivo');
   let optionValue = select.options[select.selectedIndex];
-  sTipo.value = optionValue.value;
+  sTipoArquivo.value = optionValue.value;
 }
 
 function limparCamposPesquisa() {
@@ -151,56 +152,18 @@ function limparCamposPesquisa() {
   sDataFinal.value = '';
 }
 
-btnSalvar.onclick = e => {
-  
-  if (sBanco.value == '' || sTipo.value == '' || sArquivo.value == '' || sDtGeracao.value == '' || sUsuarioGeracao.value == '' || sDtEnvio.value == '' || sQtdLinhas.value == '' || sVlrTotal.value == '') {
-    return
-  }
-
-  e.preventDefault();
-
-  if (id !== undefined) {
-    
-    itens[id].banco = sBanco.value
-    itens[id].tipo = sTipo.value
-    itens[id].arquivo = sArquivo.value
-    itens[id].dtGeracao = sDtGeracao.value
-    itens[id].usuarioGeracao = sUsuarioGeracao.value
-    itens[id].dtEnvio = sDtEnvio.value
-    itens[id].qtdLinhas = sQtdLinhas.value
-    itens[id].vlrTotal = sVlrTotal.value
-
-  } else {
-    
-    itens.push({'banco': sBanco.value, 'tipo': sTipo.value, 'arquivo': sArquivo.value, 'dtGeracao': sDtGeracao.value, 'usuarioGeracao': sUsuarioGeracao.value, 'dtEnvio': sDtEnvio.value, 'qtdLinhas': sQtdLinhas.value, 'vlrTotal': sVlrTotal.value})
-    
-    fetch("http://localhost:8080/api/arquivo/save",{
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      method: "POST",
-      body: JSON.stringify({
-        'banco': sBanco.value,
-        'tipo': sTipo.value,
-        'nomeArquivo': sNomeArquivo.value,
-        'dtGeracao': sDtGeracao.value,
-        'usuarioGeracao': sUsuarioGeracao.value,
-        'dtEnvio': sDtEnvio.value,
-        'qtdLinhas': sQtdLinhas.value,
-        'vlrTotal': sVlrTotal.value
-      })
-    })
-    .then(function (res) { console.log(res) })
-    .catch(function (res) { console.log(res) })
-  }
-
-  setItensBD()
-  console.log(sBanco.value)
-
-  modal.classList.remove('active')
-  loadItens()
-  id = undefined
+function uploadArquivo() {
+  console.log(document.getElementById('m-arquivo').files[0]);
+  let formData = new FormData();
+  formData.append("arquivo",document.getElementById('m-arquivo').files[0])
+  formData.append("banco",document.getElementById('m-banco').value)
+  formData.append("vlrTotal",document.getElementById('m-vlrTotal').value)
+  fetch("http://localhost:8080/api/arquivo/save",{
+    method: "POST",
+    body: formData
+  })
+  .then(function (res) { console.log(res) })
+  .catch(function (res) { console.log(res) })
 }
 
 function loadItens() {
