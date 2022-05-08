@@ -10,7 +10,6 @@ import java.util.Date;
 import java.util.List;
 import java.util.Scanner;
 
-import javax.sql.rowset.serial.SerialBlob;
 import javax.sql.rowset.serial.SerialException;
 
 import com.teste.crudspringteste.dao.ArquivoMapper;
@@ -118,8 +117,7 @@ public class ArquivoController {
         Path caminho = Paths.get(raizProjeto+"/arquivosUpload/"+arquivo.getOriginalFilename());
         Files.write(caminho, bytes);
         
-        SerialBlob sBlob = new SerialBlob(arquivo.getBytes());
-        arquivoSave.setArquivo(sBlob);
+        arquivoSave.setArquivo(arquivo.getBytes());
         
         arquivoSave.setNomeArquivo(arquivo.getOriginalFilename());
         arquivoSave.setBanco("BRADESCO");

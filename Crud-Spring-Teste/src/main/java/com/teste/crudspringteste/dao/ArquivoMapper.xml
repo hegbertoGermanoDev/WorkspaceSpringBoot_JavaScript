@@ -28,6 +28,7 @@
         <result property="banco" column="banco"/>
         <result property="tipo" column="tipo"/>
         <result property="nomeArquivo" column="nome_arquivo"/>
+        <result property="arquivo" javaType="_byte[]" column="arquivo"/>
         <result property="dtGeracao" column="dt_geracao"/>
         <result property="usuarioGeracao" column="usuario_geracao"/>
         <result property="dtEnvio" column="dt_envio"/>

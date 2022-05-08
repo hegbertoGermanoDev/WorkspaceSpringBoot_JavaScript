@@ -1,6 +1,5 @@
 package com.teste.crudspringteste.model;
 
-import java.sql.Blob;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -28,8 +27,8 @@ public class Arquivo {
     @Column
     private String nomeArquivo;
     
-    @Column
-    private Blob arquivo;
+    @Column(length = 1048576)
+    private byte[] arquivo;
     
     @Column
     private Date dtGeracao;
@@ -79,11 +78,11 @@ public class Arquivo {
         this.nomeArquivo = nomeArquivo;
     }
     
-    public Blob getArquivo() {
+    public byte[] getArquivo() {
         return this.arquivo;
     }
 
-    public void setArquivo(Blob arquivo) {
+    public void setArquivo(byte[] arquivo) {
         this.arquivo = arquivo;
     }
     
