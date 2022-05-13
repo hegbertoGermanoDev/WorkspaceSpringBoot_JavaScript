@@ -19,7 +19,11 @@ import com.teste.crudspringteste.repository.ArquivoCustomRepository;
 import com.teste.crudspringteste.repository.ArquivoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -105,7 +109,7 @@ public class ArquivoController {
      */
     @PostMapping(path = "/save")
     @ResponseStatus(HttpStatus.CREATED)
-    public Arquivo save(MultipartFile arquivo, String banco, String vlrTotal) throws IOException, SerialException, SQLException {
+    public Arquivo save(MultipartFile arquivo, String banco, String vlrTotal) throws IOException {
         int qtdLinhas = 0;
         String extensaoArq = "";
         Arquivo arquivoSave = new Arquivo();
@@ -147,6 +151,18 @@ public class ArquivoController {
         vlrTotal = vlrTotal.replace(",", ".");
         arquivoSave.setVlrTotal(Double.parseDouble(vlrTotal));
         return arquivoRepository.save(arquivoSave);
+    }
+
+    @GetMapping(path = "/downloadArquivo")
+    public ResponseEntity<ByteArrayResource> downloadArquivo(@RequestParam Long id) {
+        Arquivo arquivo = arquivoRepository.getById(id);
+        Path path = Paths.get("");
+		String raizProjeto = path.toAbsolutePath().toString();
+        Path caminho = Paths.get(raizProjeto+"/arquivosUpload/"+arquivo.getNomeArquivo());
+        return ResponseEntity.ok()
+                .contentType(MediaType.parseMediaType(arquivo.getTipo()))
+                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment:filename=\""+caminho+"\"")
+                .body(new ByteArrayResource(arquivo.getArquivo()));
     }
 
 }

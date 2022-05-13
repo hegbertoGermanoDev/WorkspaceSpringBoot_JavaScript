@@ -37,12 +37,12 @@ button {
 
 .header span {
   font-weight: 900;
-  font-size: 20px;
+  font-size: 24px;
   word-break: break-all;
 }
 
 #new {
-  font-size: 16px;
+  font-size: 10px;
   padding: 8px;
   border-radius: 5px;
   border: none;
@@ -109,16 +109,16 @@ tbody tr td.acao {
 
 @media (max-width: 700px) {
   body {
-    font-size: 10px;
+    font-size: 6px;
   }
   
   .header span {
-    font-size: 15px;
+    font-size: 6px;
   }
 
   #new {
     padding: 5px;
-    font-size: 10px;
+    font-size: 6px;
   }
 
   thead tr th.acao {
@@ -126,7 +126,7 @@ tbody tr td.acao {
   }
   
   td button i {
-    font-size: 20px!important;
+    font-size: 12px!important;
   }
 
   td button i:first-child {
@@ -138,7 +138,7 @@ tbody tr td.acao {
   }
 
   .modal label {
-    font-size: 12px!important;
+    font-size: 8px!important;
   }
 }
 
@@ -182,12 +182,11 @@ tbody tr td.acao {
 }
 
 .modal button {
-  width: 100%;
+  width: 50%;
   margin: 10px auto;
   outline: none;
-  border-radius: 20px; 
-  padding: 5px 10px; 
-  width: 100%;
+  border-radius: 5px;
+  padding: 5px 10px;
   border: none;
   background-color: rgb(57, 57, 226);
   color: white;
@@ -219,7 +218,7 @@ td button {
 }
 
 td button i {
-  font-size: 25px;
+  font-size: 20px;
 }
 
 td button i:first-child {

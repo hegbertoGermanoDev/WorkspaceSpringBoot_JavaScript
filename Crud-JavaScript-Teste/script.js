@@ -81,6 +81,9 @@ function insertItem(item, index) {
     <td>R$ ${item.vlrTotal}</td>
 
     <td class="acao">
+      <button onclick="downloadItem(${index})"><i class='bx bx-download' ></i></button>
+    </td>
+    <td class="acao">
       <button onclick="editItem(${index})"><i class='bx bx-edit' ></i></button>
     </td>
     <td class="acao">
@@ -88,6 +91,10 @@ function insertItem(item, index) {
     </td>
   `
   tbody.appendChild(tr)
+}
+
+function downloadItem(index) {
+
 }
 
 function pesquisarArqvuivosGet() {
@@ -162,8 +169,11 @@ function uploadArquivo() {
     method: "POST",
     body: formData
   })
-  .then(function (res) { console.log(res) })
-  .catch(function (res) { console.log(res) })
+  .then(response => console.log(response.json()))
+  .then(data => {
+    console.log(data);
+    
+  })
 }
 
 function loadItens() {
