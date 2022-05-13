@@ -18,6 +18,13 @@ body {
 
 button {
   cursor: pointer;
+  margin: 5px;
+  outline: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  border: none;
+  background-color: rgb(57, 57, 226);
+  color: white;
 }
 
 .container {
@@ -182,8 +189,8 @@ tbody tr td.acao {
 }
 
 .modal button {
-  width: 50%;
-  margin: 10px auto;
+  width: 20%;
+  margin: 5px;
   outline: none;
   border-radius: 5px;
   padding: 5px 10px;
@@ -209,18 +216,4 @@ tbody tr td.acao {
     opacity: 1;
     transform: translate3d(0, 0, 0);
   }
-}
-
-td button {
-  border: none;
-  outline: none;
-  background: transparent;
-}
-
-td button i {
-  font-size: 20px;
-}
-
-td button i:first-child {
-  margin-right: 10px;
 }

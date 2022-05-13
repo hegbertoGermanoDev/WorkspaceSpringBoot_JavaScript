@@ -160,8 +160,7 @@ public class ArquivoController {
 		String raizProjeto = path.toAbsolutePath().toString();
         Path caminho = Paths.get(raizProjeto+"/arquivosUpload/"+arquivo.getNomeArquivo());
         return ResponseEntity.ok()
-                .contentType(MediaType.parseMediaType(arquivo.getTipo()))
-                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment:filename=\""+caminho+"\"")
+                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment:filename=\""+caminho.getParent()+"\"")
                 .body(new ByteArrayResource(arquivo.getArquivo()));
     }
 
