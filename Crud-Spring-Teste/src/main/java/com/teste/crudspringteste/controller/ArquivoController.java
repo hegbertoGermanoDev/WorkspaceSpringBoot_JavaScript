@@ -20,6 +20,7 @@ import com.teste.crudspringteste.repository.ArquivoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -154,13 +155,14 @@ public class ArquivoController {
     }
 
     @GetMapping(path = "/downloadArquivo")
-    public ResponseEntity<ByteArrayResource> downloadArquivo(@RequestParam Long id) {
+    public ResponseEntity<Resource> downloadArquivo(@RequestParam Long id) {
         Arquivo arquivo = arquivoRepository.getById(id);
-        Path path = Paths.get("");
-		String raizProjeto = path.toAbsolutePath().toString();
-        Path caminho = Paths.get(raizProjeto+"/arquivosUpload/"+arquivo.getNomeArquivo());
+        //Path path = Paths.get("");
+		//String raizProjeto = path.toAbsolutePath().toString();
+        //Path caminho = Paths.get(raizProjeto+"/arquivosUpload/"+arquivo.getNomeArquivo());
         return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment:filename=\""+caminho.getParent()+"\"")
+                .contentType(MediaType.TEXT_PLAIN)
+                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment:filename=\""+arquivo.getNomeArquivo()+"\"")
                 .body(new ByteArrayResource(arquivo.getArquivo()));
     }
 

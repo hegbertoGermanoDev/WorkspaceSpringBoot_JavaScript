@@ -93,10 +93,6 @@ function insertItem(item, index) {
   tbody.appendChild(tr)
 }
 
-function downloadItem(index) {
-
-}
-
 function pesquisarArqvuivosGet() {
   deleteItem(-1);
   atualizouSelect();
@@ -177,16 +173,14 @@ function uploadArquivo() {
 }
 
 function downloadItem() {
-  fetch(`http://localhost:8080/api/arquivo/downloadArquivo/?id=${sTipoArquivo.value}`)
-  .then(response => response.json())
-  .then(data => {
-    data.forEach((item, index) => {
-      let dataGeracaoFormat = new Date(item.dtGeracao)
-      item.dtGeracao = (dataGeracaoFormat.getDate()) + "/" + (dataGeracaoFormat.getMonth() + 1) + "/" + dataGeracaoFormat.getFullYear()
-      let dataEnvioFormat = new Date(item.dtEnvio)
-      item.dtEnvio = (dataEnvioFormat.getDate()) + "/" + (dataEnvioFormat.getMonth() + 1) + "/" + dataEnvioFormat.getFullYear()
-      insertItem(item, index)
-    })
+  fetch(`http://localhost:8080/api/arquivo/downloadArquivo/?id=1`)
+  .then(function(data){
+    console.log(data);
+  })
+  .then(function(result){
+    console.log(result);
+    const fileUrl = URL.createObjectURL(result);
+    console.log(fileUrl);
   })
 }
 
