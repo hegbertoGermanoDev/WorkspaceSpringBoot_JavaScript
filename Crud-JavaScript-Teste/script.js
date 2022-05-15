@@ -172,15 +172,16 @@ function uploadArquivo() {
   })
 }
 
-function downloadItem() {
+function downloadItem(item) {
+  console.log(item);
   fetch(`http://localhost:8080/api/arquivo/downloadArquivo/?id=1`)
   .then(function(data){
     console.log(data);
-  })
-  .then(function(result){
-    console.log(result);
-    const fileUrl = URL.createObjectURL(result);
-    console.log(fileUrl);
+    var binaryData = [];
+    binaryData.push(data.blob());
+    var url = URL.createObjectURL(new Blob(binaryData, {type: "application/text"}));
+    window.location.assign(url);
+    console.log(url);
   })
 }
 
