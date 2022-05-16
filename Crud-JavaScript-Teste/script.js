@@ -176,12 +176,22 @@ function downloadItem(item) {
   console.log(item);
   fetch(`http://localhost:8080/api/arquivo/downloadArquivo/?id=1`)
   .then(function(data){
-    console.log(data);
+    console.log(data.blob());
+    /*
     var binaryData = [];
     binaryData.push(data.blob());
     var url = URL.createObjectURL(new Blob(binaryData, {type: "application/text"}));
     window.location.assign(url);
     console.log(url);
+    */
+    var element = document.createElement('a');
+    element.setAttribute('href','data:text/plain;charset=utf-8, ' + encodeURIComponent("Teste Download!"));
+    element.setAttribute('download', "teste.txt");
+    document.body.appendChild(element);
+    element.click();
+  })
+  .then(function(result){
+    console.log(result);
   })
 }
 

@@ -157,9 +157,6 @@ public class ArquivoController {
     @GetMapping(path = "/downloadArquivo")
     public ResponseEntity<Resource> downloadArquivo(@RequestParam Long id) {
         Arquivo arquivo = arquivoRepository.getById(id);
-        //Path path = Paths.get("");
-		//String raizProjeto = path.toAbsolutePath().toString();
-        //Path caminho = Paths.get(raizProjeto+"/arquivosUpload/"+arquivo.getNomeArquivo());
         return ResponseEntity.ok()
                 .contentType(MediaType.TEXT_PLAIN)
                 .header(HttpHeaders.CONTENT_DISPOSITION,"attachment:filename=\""+arquivo.getNomeArquivo()+"\"")
