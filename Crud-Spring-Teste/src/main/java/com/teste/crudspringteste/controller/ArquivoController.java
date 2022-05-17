@@ -1,5 +1,7 @@
 package com.teste.crudspringteste.controller;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -19,7 +21,7 @@ import com.teste.crudspringteste.repository.ArquivoCustomRepository;
 import com.teste.crudspringteste.repository.ArquivoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ByteArrayResource;
+import org.springframework.core.io.InputStreamResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -155,12 +157,20 @@ public class ArquivoController {
     }
 
     @GetMapping(path = "/downloadArquivo")
-    public ResponseEntity<Resource> downloadArquivo(@RequestParam Long id) {
-        Arquivo arquivo = arquivoRepository.getById(id);
+    public ResponseEntity<Resource> downloadArquivo(@RequestParam Long id) throws FileNotFoundException, SerialException, SQLException {
+        Arquivo arquivo = new Arquivo();
+        arquivo.setId(id);
+        Arquivo arquivoRet = arquivoMapper.getArquivoById(arquivo);
+        //return arquivoRet;
+        Path path = Paths.get("");
+		String raizProjeto = path.toAbsolutePath().toString();
+        Path caminho = Paths.get(raizProjeto+"/arquivosUpload/"+arquivoRet.getNomeArquivo());
+        InputStreamResource resource = new InputStreamResource(new FileInputStream(caminho.toFile()));
         return ResponseEntity.ok()
-                .contentType(MediaType.TEXT_PLAIN)
-                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment:filename=\""+arquivo.getNomeArquivo()+"\"")
-                .body(new ByteArrayResource(arquivo.getArquivo()));
+                .contentType(MediaType.parseMediaType("application/octet-stream"))
+                .header(HttpHeaders.CONTENT_DISPOSITION,"attachment;filename=\""+arquivoRet.getNomeArquivo()+"\"")
+                .body(resource);
+        
     }
 
 }

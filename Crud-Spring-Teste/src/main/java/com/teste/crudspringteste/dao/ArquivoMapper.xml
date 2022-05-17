@@ -50,4 +50,21 @@
             BETWEEN to_char(#{dataInicial},'dd/mm/yyyy') AND to_char(#{dataFinal},'dd/mm/yyyy')
         </if>
     </select>
+
+    <resultMap id="resultGetArquivoById" type="arquivo">
+        <id property="id" column="id"/>
+        <result property="id" column="id"/>
+        <result property="tipo" column="tipo"/>
+        <result property="nomeArquivo" column="nome_arquivo"/>
+        <result property="arquivo" javaType="_byte[]" column="arquivo"/>
+    </resultMap>
+    <select id="getArquivoById" parameterType="arquivo" resultMap="resultGetArquivoById">
+        SELECT id,
+               tipo,
+               nome_arquivo,
+               arquivo
+          FROM arquivo a
+         WHERE 1 = 1
+           AND a.id = #{id}
+    </select>
 </mapper>

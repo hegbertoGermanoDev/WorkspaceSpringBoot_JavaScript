@@ -168,31 +168,28 @@ function uploadArquivo() {
   .then(response => console.log(response.json()))
   .then(data => {
     console.log(data);
-    
   })
 }
 
-function downloadItem(item) {
-  console.log(item);
+function downloadItem(index) {
+  //console.log(itens[index]);
   fetch(`http://localhost:8080/api/arquivo/downloadArquivo/?id=1`)
-  .then(function(data){
-    console.log(data.blob());
-    /*
-    var binaryData = [];
-    binaryData.push(data.blob());
-    var url = URL.createObjectURL(new Blob(binaryData, {type: "application/text"}));
-    window.location.assign(url);
-    console.log(url);
-    */
-    var element = document.createElement('a');
-    element.setAttribute('href','data:text/plain;charset=utf-8, ' + encodeURIComponent("Teste Download!"));
-    element.setAttribute('download', "teste.txt");
-    document.body.appendChild(element);
-    element.click();
-  })
-  .then(function(result){
-    console.log(result);
-  })
+    .then(res => res.blob())
+    .then(data => {
+      console.log(data);
+      var file = new File([data], "teste.txt");
+      var a = document.createElement("a");
+      var url = window.URL.createObjectURL(file);
+      a.href = url;
+      a.download = "teste.txt";
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function() {
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+      }, 0);
+      
+    })
 }
 
 function loadItens() {
