@@ -81,7 +81,7 @@ function insertItem(item, index) {
     <td>R$ ${item.vlrTotal}</td>
 
     <td class="acao">
-      <button onclick="downloadItem(${index})"><i class='bx bx-download' ></i></button>
+      <button onclick="downloadArquivo(${index})"><i class='bx bx-download' ></i></button>
     </td>
     <td class="acao">
       <button onclick="editItem(${index})"><i class='bx bx-edit' ></i></button>
@@ -96,16 +96,29 @@ function insertItem(item, index) {
 function pesquisarArqvuivosGet() {
   deleteItem(-1);
   atualizouSelect();
-  console.log('URL GET: ' + `http://localhost:8080/api/arquivo/listFiltros/?tipo=${sTipoArquivo.value}&nomeArquivo=${sNomeArquivo.value}&dataInicial=${sDataInicial.value}&dataFinal=${sDataFinal.value}`)
-  fetch(`http://localhost:8080/api/arquivo/listFiltros/?tipo=${sTipoArquivo.value}&nomeArquivo=${sNomeArquivo.value}&dataInicial=${sDataInicial.value}&dataFinal=${sDataFinal.value}`)
+  const formatDateUnit = unit => String(unit).length === 1 ? `0${unit}` : unit;
+  var dateIni = null;
+  var dateFin = null;
+  var dataInicialStr = "";
+  var dataFinalStr = "";
+  if (document.getElementById("m-dataInicial").value != "") {
+    dateIni = new Date(document.getElementById("m-dataInicial").value);
+    dataInicialStr = formatDateUnit(dateIni.getDate())+"/"+formatDateUnit(dateIni.getMonth()+1)+"/"+dateIni.getFullYear();
+  }
+  if (document.getElementById("m-dataFinal").value != "") {
+    dateFin = new Date(document.getElementById("m-dataFinal").value);
+    dataFinalStr = formatDateUnit(dateFin.getDate())+"/"+formatDateUnit(dateFin.getMonth()+1)+"/"+dateFin.getFullYear();
+  }
+  console.log('URL GET: ' + `http://localhost:8080/api/arquivo/listFiltros/?tipo=${sTipoArquivo.value}&nomeArquivo=${sNomeArquivo.value}&dataInicial=${dataInicialStr}&dataFinal=${dataFinalStr}`)
+  fetch(`http://localhost:8080/api/arquivo/listFiltros/?tipo=${sTipoArquivo.value}&nomeArquivo=${sNomeArquivo.value}&dataInicial=${dataInicialStr}&dataFinal=${dataFinalStr}`)
   .then(response => response.json())
   .then(data => {
     data.forEach((item, index) => {
-      let dataGeracaoFormat = new Date(item.dtGeracao)
-      item.dtGeracao = (dataGeracaoFormat.getDate()) + "/" + (dataGeracaoFormat.getMonth() + 1) + "/" + dataGeracaoFormat.getFullYear()
-      let dataEnvioFormat = new Date(item.dtEnvio)
-      item.dtEnvio = (dataEnvioFormat.getDate()) + "/" + (dataEnvioFormat.getMonth() + 1) + "/" + dataEnvioFormat.getFullYear()
-      insertItem(item, index)
+      let dataGeracaoFormat = new Date(item.dtGeracao);
+      let dataEnvioFormat = new Date(item.dtEnvio);
+      item.dtGeracao = formatDateUnit(dataGeracaoFormat.getDate())+"/"+formatDateUnit(dataGeracaoFormat.getMonth()+1)+"/"+dataGeracaoFormat.getFullYear();
+      item.dtEnvio = formatDateUnit(dataEnvioFormat.getDate())+"/"+formatDateUnit(dataEnvioFormat.getMonth()+1)+"/"+dataEnvioFormat.getFullYear();
+      insertItem(item, index);
     })
   })
   //limparCamposPesquisa();
@@ -171,17 +184,19 @@ function uploadArquivo() {
   })
 }
 
-function downloadItem(index) {
-  //console.log(itens[index]);
-  fetch(`http://localhost:8080/api/arquivo/downloadArquivo/?id=1`)
+function downloadArquivo(index) {
+  itens = document.getElementById("listArquivos");
+  const nomeArquivo = itens.rows[index+1].cells[2].innerHTML;
+  console.log(nomeArquivo);
+  fetch(`http://localhost:8080/api/arquivo/downloadArquivo/?nomeArquivo=${nomeArquivo}`)
     .then(res => res.blob())
     .then(data => {
       console.log(data);
-      var file = new File([data], "teste.txt");
+      var file = new File([data], nomeArquivo);
       var a = document.createElement("a");
       var url = window.URL.createObjectURL(file);
       a.href = url;
-      a.download = "teste.txt";
+      a.download = nomeArquivo;
       document.body.appendChild(a);
       a.click();
       setTimeout(function() {

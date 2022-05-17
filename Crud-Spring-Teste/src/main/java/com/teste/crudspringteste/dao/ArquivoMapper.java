@@ -28,9 +28,9 @@ public class ArquivoMapper {
         return arquivoList;
     }
 
-    public Arquivo getArquivoById(Arquivo arquivo) {
+    public Arquivo getArquivoByNomeArquivo(Arquivo arquivo) {
         SqlSession session = MyBatisUtil.getSqlSessionFactory().openSession();
-        Arquivo arquivoRet = session.selectOne("getArquivoById", arquivo);
+        Arquivo arquivoRet = session.selectOne("getArquivoByNomeArquivo", arquivo);
         session.commit();
         session.close();
         return arquivoRet;

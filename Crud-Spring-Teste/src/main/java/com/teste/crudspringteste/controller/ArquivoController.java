@@ -157,10 +157,10 @@ public class ArquivoController {
     }
 
     @GetMapping(path = "/downloadArquivo")
-    public ResponseEntity<Resource> downloadArquivo(@RequestParam Long id) throws FileNotFoundException, SerialException, SQLException {
+    public ResponseEntity<Resource> downloadArquivo(@RequestParam String nomeArquivo) throws FileNotFoundException, SerialException, SQLException {
         Arquivo arquivo = new Arquivo();
-        arquivo.setId(id);
-        Arquivo arquivoRet = arquivoMapper.getArquivoById(arquivo);
+        arquivo.setNomeArquivo(nomeArquivo);
+        Arquivo arquivoRet = arquivoMapper.getArquivoByNomeArquivo(arquivo);
         //return arquivoRet;
         Path path = Paths.get("");
 		String raizProjeto = path.toAbsolutePath().toString();

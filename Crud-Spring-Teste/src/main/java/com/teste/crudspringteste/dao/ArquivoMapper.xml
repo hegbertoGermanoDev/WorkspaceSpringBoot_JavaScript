@@ -51,20 +51,20 @@
         </if>
     </select>
 
-    <resultMap id="resultGetArquivoById" type="arquivo">
+    <resultMap id="resultGetArquivoByNomeArquivo" type="arquivo">
         <id property="id" column="id"/>
         <result property="id" column="id"/>
         <result property="tipo" column="tipo"/>
         <result property="nomeArquivo" column="nome_arquivo"/>
         <result property="arquivo" javaType="_byte[]" column="arquivo"/>
     </resultMap>
-    <select id="getArquivoById" parameterType="arquivo" resultMap="resultGetArquivoById">
+    <select id="getArquivoByNomeArquivo" parameterType="arquivo" resultMap="resultGetArquivoByNomeArquivo">
         SELECT id,
                tipo,
                nome_arquivo,
                arquivo
           FROM arquivo a
          WHERE 1 = 1
-           AND a.id = #{id}
+           AND a.nome_arquivo = #{nomeArquivo}
     </select>
 </mapper>
