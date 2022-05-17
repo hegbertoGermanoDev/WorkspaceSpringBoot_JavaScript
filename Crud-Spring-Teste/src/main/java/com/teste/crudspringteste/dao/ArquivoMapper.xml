@@ -27,7 +27,7 @@
         <result property="id" column="id"/>
         <result property="banco" column="banco"/>
         <result property="tipo" column="tipo"/>
-        <result property="nomeArquivo" column="nome_arquivo"/>
+        <result property="nomeArquivo" javaType="String" column="nome_arquivo"/>
         <result property="arquivo" javaType="_byte[]" column="arquivo"/>
         <result property="dtGeracao" column="dt_geracao"/>
         <result property="usuarioGeracao" column="usuario_geracao"/>
@@ -40,7 +40,7 @@
           FROM arquivo a
          WHERE 1 = 1
         <if test="nomeArquivo != null and nomeArquivo != ''">
-           AND a.nome_arquivo = #{nomeArquivo}
+           AND a.nome_arquivo LIKE ('%'||#{nomeArquivo}||'%')
         </if>
         <if test="tipo != null and tipo != ''">
             AND a.tipo = #{tipo}
