@@ -1,5 +1,6 @@
 
 const modal = document.querySelector('.modal-container')
+const modalExc = document.querySelector('.modal-container-exc')
 const tbody = document.querySelector('tbody')
 
 const btnSalvar = document.querySelector('#btnSalvar')
@@ -19,6 +20,8 @@ const sDataFinal = document.querySelector('#m-dataFinal')
 
 let itens
 let id
+let idArqSelTab
+let indexArqSelTab
 
 
 function openModal(edit = false, index = 0) {
@@ -32,45 +35,61 @@ function openModal(edit = false, index = 0) {
 
   if (edit) {
     
-    //sBanco.value = itens[index].banco
-    //sTipo.value = itens[index].tipo
+    sBanco.value = itens[index].banco
     //sArquivo.value = itens[index].arquivo
-    //sDtGeracao.value = itens[index].dtGeracao
-    //sUsuarioGeracao.value = itens[index].usuarioGeracao
-    //sDtEnvio.value = itens[index].dtEnvio
-    //sQtdLinhas.value = itens[index].qtdLinhas
-    //sVlrTotal.value = itens[index].vlrTotal
+    sVlrTotal.value = itens[index].vlrTotal
 
     id = index
   } else {
     
     sBanco.value = ''
-    //sTipo.value = ''
     sArquivo.value = ''
-    //sDtGeracao.value = ''
-    //sUsuarioGeracao.value = ''
-    //sDtEnvio.value = ''
-    //sQtdLinhas.value = ''
     sVlrTotal.value = ''
   }
   
 }
 
 function editItem(index) {
-
-  openModal(true, index)
+  openModal(true, index);
 }
 
 function deleteItem(index) {
-  itens.splice(index, 1)
-  setItensBD()
-  loadItens()
+  indexArqSelTab = index+1;
+  itens = document.getElementById("listArquivos");
+  idArqSelTab = itens.rows[index+1].cells[0].innerHTML;
+  console.log(idArqSelTab);
+  modalExc.classList.add('active');
+  modalExc.onclick = e => {
+    if (e.target.className.indexOf('modal-container-exc') !== -1) {
+      modalExc.classList.remove('active')
+    }
+  }
+}
+
+function confirmarExclusao(response) {
+  if (response && idArqSelTab != null) {
+    fetch(`http://localhost:8080/api/arquivo/deleteArquivo/?id=${idArqSelTab}`)
+    .then(res => {
+      if (res.status = 200) {
+        console.log(res);
+        modalExc.classList.remove('active');
+        //itens.deleteRow(indexArqSelTab);
+      }
+    })
+  }
+  else {
+    idArqSelTab = null;
+    indexArqSelTab = null;
+    modalExc.classList.remove('active');
+  }
+  pesquisarArqvuivosGet();
 }
 
 function insertItem(item, index) {
   let tr = document.createElement('tr')
 
   tr.innerHTML = `
+    <td class="some">${item.id}</td>
     <td>${item.banco}</td>
     <td>${item.tipo}</td>
     <td>${item.nomeArquivo}</td>
@@ -93,8 +112,16 @@ function insertItem(item, index) {
   tbody.appendChild(tr)
 }
 
+function limparTable() {
+  var table = document.getElementById("listArquivos");
+  var rowCount = table.rows.length;
+  for (var i=rowCount-1; i >0; i--) {
+    table.deleteRow(i);
+  }
+}
+
 function pesquisarArqvuivosGet() {
-  deleteItem(-1);
+  limparTable();
   atualizouSelect();
   const formatDateUnit = unit => String(unit).length === 1 ? `0${unit}` : unit;
   var dateIni = null;
@@ -186,7 +213,7 @@ function uploadArquivo() {
 
 function downloadArquivo(index) {
   itens = document.getElementById("listArquivos");
-  const nomeArquivo = itens.rows[index+1].cells[2].innerHTML;
+  const nomeArquivo = itens.rows[index+1].cells[3].innerHTML;
   console.log(nomeArquivo);
   fetch(`http://localhost:8080/api/arquivo/downloadArquivo/?nomeArquivo=${nomeArquivo}`)
     .then(res => res.blob())

@@ -46,6 +46,7 @@
       <table id="listArquivos">
         <thead>
           <tr>
+            <th class="some">Id</th>
             <th>Banco</th>
             <th>Tipo</th>
             <th>Arquivo</th>
@@ -79,6 +80,14 @@
           
         </form>
         <button id="btnSalvar" onclick="uploadArquivo()">Upload Arquivo</button>
+      </div>
+    </div>
+
+    <div class="modal-container-exc">
+      <div class="modal">
+        Confirmar Exclusão?
+        <button id="btnExcluirSim" onclick="confirmarExclusao(true)">Sim</button>
+        <button id="btnExcluirNao" onclick="confirmarExclusao(false)">Não</button>
       </div>
     </div>
 
