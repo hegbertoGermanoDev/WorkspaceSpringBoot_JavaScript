@@ -3,6 +3,7 @@ package com.teste.crudspringteste.controller;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
@@ -117,13 +118,13 @@ public class ArquivoController {
         Arquivo arquivoSave = new Arquivo();
         
         /*Buscando caminho raiz do projeto para salvar arquivos iniciais*/
-        /*
+        
         Path path = Paths.get("");
 		String raizProjeto = path.toAbsolutePath().toString();
         byte[] bytes = arquivo.getBytes();
         Path caminho = Paths.get(raizProjeto+"/arquivosUpload/"+arquivo.getOriginalFilename());
         Files.write(caminho, bytes);
-        */
+        
         arquivoSave.setArquivo(arquivo.getBytes());
         
         arquivoSave.setNomeArquivo(arquivo.getOriginalFilename());

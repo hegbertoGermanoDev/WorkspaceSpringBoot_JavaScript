@@ -26,13 +26,14 @@ let indexArqSelTab
 
 function openModal(edit = false, index = 0) {
   modal.classList.add('active')
-
+  
   modal.onclick = e => {
     if (e.target.className.indexOf('modal-container') !== -1) {
       modal.classList.remove('active')
     }
+  
   }
-
+  
   if (edit) {
     
     sBanco.value = itens[index].banco
@@ -66,24 +67,25 @@ function deleteItem(index) {
   }
 }
 
-function confirmarExclusao(response) {
-  if (response && idArqSelTab != null) {
-    fetch(`http://localhost:8080/api/arquivo/deleteArquivo/?id=${idArqSelTab}`)
-    .then(res => {
-      if (res.status = 200) {
-        console.log(res);
-        modalExc.classList.remove('active');
-        //itens.deleteRow(indexArqSelTab);
-      }
-    })
+async function confirmarExclusaoAsync(event) {
+  event.preventDefault();
+  if (idArqSelTab != null) {
+    const response = await fetch(`http://localhost:8080/api/arquivo/deleteArquivo/?id=${idArqSelTab}`)
+    if (response.status = 200) {
+      console.log(response);
+      modalExc.classList.remove('active');
+      pesquisarArqvuivosGet(event);
+    }
   }
   else {
     idArqSelTab = null;
     indexArqSelTab = null;
     modalExc.classList.remove('active');
   }
-  pesquisarArqvuivosGet();
 }
+
+let formConfExc = document.getElementById('formConfirmExc');
+formConfExc.addEventListener('submit',confirmarExclusaoAsync);
 
 function insertItem(item, index) {
   let tr = document.createElement('tr')
@@ -120,7 +122,10 @@ function limparTable() {
   }
 }
 
-function pesquisarArqvuivosGet() {
+let formPesq = document.getElementById('formPesquisar');
+formPesq.addEventListener('submit',pesquisarArqvuivosGet);
+function pesquisarArqvuivosGet(event) {
+  event.preventDefault();
   limparTable();
   atualizouSelect();
   const formatDateUnit = unit => String(unit).length === 1 ? `0${unit}` : unit;
@@ -148,9 +153,64 @@ function pesquisarArqvuivosGet() {
       insertItem(item, index);
     })
   })
-  //limparCamposPesquisa();
 }
 
+let formInsOrUpd = document.getElementById('formSaveOrUpdate');
+formInsOrUpd.addEventListener('submit',uploadArquivoAsync);
+async function salvarArquivo(event) {
+  await uploadArquivoAsync(event);
+}
+async function uploadArquivoAsync(event) {
+  event.preventDefault();
+  console.log(document.getElementById('m-arquivo').files[0]);
+  let formData = new FormData(formInsOrUpd);
+  formData.append("arquivo",document.getElementById('m-arquivo').files[0])
+  formData.append("banco",document.getElementById('m-banco').value)
+  formData.append("vlrTotal",document.getElementById('m-vlrTotal').value)
+  const response = await fetch("http://localhost:8080/api/arquivo/save",{
+    method: "POST",
+    body: formData
+  })
+  const data = await response.json();
+}
+
+function downloadArquivo(index) {
+  itens = document.getElementById("listArquivos");
+  const nomeArquivo = itens.rows[index+1].cells[3].innerHTML;
+  console.log(nomeArquivo);
+  fetch(`http://localhost:8080/api/arquivo/downloadArquivo/?nomeArquivo=${nomeArquivo}`)
+    .then(res => res.blob())
+    .then(data => {
+      console.log(data);
+      var file = new File([data], nomeArquivo);
+      var a = document.createElement("a");
+      var url = window.URL.createObjectURL(file);
+      a.href = url;
+      a.download = nomeArquivo;
+      document.body.appendChild(a);
+      a.click();
+      setTimeout(function() {
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+      }, 0);
+      
+    })
+}
+
+function atualizouSelect() {
+  let select = document.querySelector('#m-tipoArquivo');
+  let optionValue = select.options[select.selectedIndex];
+  sTipoArquivo.value = optionValue.value;
+}
+
+function limparCamposPesquisa() {
+  document.querySelector('#m-tipoArquivo').value = '';
+  sNomeArquivo.value = '';
+  sDataInicial.value = '';
+  sDataFinal.value = '';
+}
+
+/*
 function pesquisarArqvuivosPost() {
   deleteItem(-1);
   atualizouSelect();
@@ -181,23 +241,12 @@ function pesquisarArqvuivosPost() {
   })
   //limparCamposPesquisa();
 }
-
-function atualizouSelect() {
-  let select = document.querySelector('#m-tipoArquivo');
-  let optionValue = select.options[select.selectedIndex];
-  sTipoArquivo.value = optionValue.value;
-}
-
-function limparCamposPesquisa() {
-  document.querySelector('#m-tipoArquivo').value = '';
-  sNomeArquivo.value = '';
-  sDataInicial.value = '';
-  sDataFinal.value = '';
-}
-
-function uploadArquivo() {
+*/
+/*
+function uploadArquivo(event) {
+  event.preventDefault();
   console.log(document.getElementById('m-arquivo').files[0]);
-  let formData = new FormData();
+  let formData = new FormData(formInsOrUpd);
   formData.append("arquivo",document.getElementById('m-arquivo').files[0])
   formData.append("banco",document.getElementById('m-banco').value)
   formData.append("vlrTotal",document.getElementById('m-vlrTotal').value)
@@ -210,40 +259,4 @@ function uploadArquivo() {
     console.log(data);
   })
 }
-
-function downloadArquivo(index) {
-  itens = document.getElementById("listArquivos");
-  const nomeArquivo = itens.rows[index+1].cells[3].innerHTML;
-  console.log(nomeArquivo);
-  fetch(`http://localhost:8080/api/arquivo/downloadArquivo/?nomeArquivo=${nomeArquivo}`)
-    .then(res => res.blob())
-    .then(data => {
-      console.log(data);
-      var file = new File([data], nomeArquivo);
-      var a = document.createElement("a");
-      var url = window.URL.createObjectURL(file);
-      a.href = url;
-      a.download = nomeArquivo;
-      document.body.appendChild(a);
-      a.click();
-      setTimeout(function() {
-          document.body.removeChild(a);
-          window.URL.revokeObjectURL(url);
-      }, 0);
-      
-    })
-}
-
-function loadItens() {
-  itens = getItensBD()
-  tbody.innerHTML = ''
-  itens.forEach((item, index) => {
-    insertItem(item, index)
-  })
-
-}
-
-const getItensBD = () => JSON.parse(localStorage.getItem('dbfunc')) ?? []
-const setItensBD = () => localStorage.setItem('dbfunc', JSON.stringify(itens))
-
-loadItens()
+*/
