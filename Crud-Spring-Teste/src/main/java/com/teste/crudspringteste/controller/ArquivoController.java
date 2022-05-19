@@ -117,9 +117,8 @@ public class ArquivoController {
         String extensaoArq = "";
         Arquivo arquivoSave = new Arquivo();
         
-        Long idUpd = Long.valueOf(id);
-        if (idUpd != 0L) {
-            arquivoSave.setId(idUpd);
+        if (id != 0L) {
+            arquivoSave.setId(id);
         }
 
         /*Buscando caminho raiz do projeto para salvar arquivos iniciais*/
