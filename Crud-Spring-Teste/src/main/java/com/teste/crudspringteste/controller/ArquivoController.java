@@ -29,6 +29,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -112,13 +113,17 @@ public class ArquivoController {
      */
     @PostMapping(path = "/save")
     @ResponseStatus(HttpStatus.CREATED)
-    public Arquivo save(MultipartFile arquivo, String banco, String vlrTotal) throws IOException {
+    public Arquivo save(MultipartFile arquivo, String banco, String vlrTotal, Long id) throws IOException {
         int qtdLinhas = 0;
         String extensaoArq = "";
         Arquivo arquivoSave = new Arquivo();
         
+        Long idUpd = Long.valueOf(id);
+        if (idUpd != 0L) {
+            arquivoSave.setId(idUpd);
+        }
+
         /*Buscando caminho raiz do projeto para salvar arquivos iniciais*/
-        
         Path path = Paths.get("");
 		String raizProjeto = path.toAbsolutePath().toString();
         byte[] bytes = arquivo.getBytes();

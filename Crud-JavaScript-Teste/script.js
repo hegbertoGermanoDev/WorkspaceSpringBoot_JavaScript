@@ -18,36 +18,47 @@ const sVlrTotal = document.querySelector('#m-vlrTotal')
 const sDataInicial = document.querySelector('#m-dataInicial')
 const sDataFinal = document.querySelector('#m-dataFinal')
 
-let itens
-let id
-let idArqSelTab
-let indexArqSelTab
+let itens;
+let id;
+let idArqSelTab;
+let indexArqSelTab;
+let operacaoRegistro;
+init();
 
+function init() {
+  pesquisarArqvuivosGet(null);
+}
 
 function openModal(edit = false, index = 0) {
   modal.classList.add('active')
-  
   modal.onclick = e => {
     if (e.target.className.indexOf('modal-container') !== -1) {
       modal.classList.remove('active')
     }
-  
   }
   
   if (edit) {
-    
-    sBanco.value = itens[index].banco
-    //sArquivo.value = itens[index].arquivo
-    sVlrTotal.value = itens[index].vlrTotal
-
-    id = index
+    indexArqSelTab = index+1;
+    itens = document.getElementById("listArquivos");
+    idArqSelTab = itens.rows[index+1].cells[0].innerHTML;
+    let banco = itens.rows[index+1].cells[1].innerHTML;
+    let nomeArquivo = itens.rows[index+1].cells[3].innerHTML;
+    var vlrTotal = itens.rows[index+1].cells[8].innerHTML;
+    vlrTotal = vlrTotal.replace('R$ ','');
+    console.log(vlrTotal);
+    sBanco.value = banco;
+    sNomeArquivo.value = nomeArquivo;
+    sVlrTotal.value = vlrTotal;
+    operacaoRegistro = 'edit';
+    idUpdate = idArqSelTab;
   } else {
-    
-    sBanco.value = ''
-    sArquivo.value = ''
-    sVlrTotal.value = ''
+    idArqSelTab = null;
+    indexArqSelTab = null;
+    sBanco.value = '';
+    sNomeArquivo.value = '';
+    sVlrTotal.value = '';
+    operacaoRegistro = 'save';
   }
-  
 }
 
 function editItem(index) {
@@ -67,6 +78,8 @@ function deleteItem(index) {
   }
 }
 
+let formConfExc = document.getElementById('formConfirmExc');
+formConfExc.addEventListener('submit',confirmarExclusaoAsync);
 async function confirmarExclusaoAsync(event) {
   event.preventDefault();
   if (idArqSelTab != null) {
@@ -84,8 +97,11 @@ async function confirmarExclusaoAsync(event) {
   }
 }
 
-let formConfExc = document.getElementById('formConfirmExc');
-formConfExc.addEventListener('submit',confirmarExclusaoAsync);
+function cancelarExclusao() {
+  idArqSelTab = null;
+  indexArqSelTab = null;
+  modalExc.classList.remove('active');
+}
 
 function insertItem(item, index) {
   let tr = document.createElement('tr')
@@ -125,7 +141,9 @@ function limparTable() {
 let formPesq = document.getElementById('formPesquisar');
 formPesq.addEventListener('submit',pesquisarArqvuivosGet);
 function pesquisarArqvuivosGet(event) {
-  event.preventDefault();
+  if (event != null) {
+    event.preventDefault();
+  }
   limparTable();
   atualizouSelect();
   const formatDateUnit = unit => String(unit).length === 1 ? `0${unit}` : unit;
@@ -167,11 +185,21 @@ async function uploadArquivoAsync(event) {
   formData.append("arquivo",document.getElementById('m-arquivo').files[0])
   formData.append("banco",document.getElementById('m-banco').value)
   formData.append("vlrTotal",document.getElementById('m-vlrTotal').value)
-  const response = await fetch("http://localhost:8080/api/arquivo/save",{
-    method: "POST",
-    body: formData
-  })
-  const data = await response.json();
+  if (operacaoRegistro == 'save') {
+    formData.append("id",0);
+    const response = await fetch("http://localhost:8080/api/arquivo/save",{
+      method: "POST",
+      body: formData
+    })
+    const data = await response.json();
+  } else if (operacaoRegistro == 'edit') {
+    formData.append("id",idArqSelTab);
+    const response = await fetch("http://localhost:8080/api/arquivo/save",{
+      method: "POST",
+      body: formData
+    })
+    const data = await response.json();
+  }
 }
 
 function downloadArquivo(index) {
@@ -208,6 +236,7 @@ function limparCamposPesquisa() {
   sNomeArquivo.value = '';
   sDataInicial.value = '';
   sDataFinal.value = '';
+  limparTable();
 }
 
 /*

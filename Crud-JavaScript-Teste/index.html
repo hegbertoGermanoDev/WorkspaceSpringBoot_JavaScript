@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-br">
 
 <head>
   <meta charset="UTF-8">
@@ -14,7 +14,6 @@
   <div class="container">
     <div class="header">
       <span>Listagem de Arquivos</span>
-      <button id="new" onclick="openModal()">Novo Arquivo</button>
     </div>
     
     <div class="modal">
@@ -35,9 +34,11 @@
           <option value="RET">RET</option>
         </select>
         <button id="btnPesquisar" type="submit">Pesquisar</button>
-        <button id="btnLimparCamposPesquisa" onclick="limparCamposPesquisa()">Limpar</button>
+        <button id="new" onclick="openModal(false, 0)">Novo Arquivo</button>
       </form>
     </div>
+    
+    <button id="btnLimparCamposPesquisa" onclick="limparCamposPesquisa()">Limpar</button>
     
     <div class="divTable">
       <table id="listArquivos">
@@ -76,7 +77,6 @@
           <input id="m-arquivo" type="file" required />
           <button id="btnSalvar" type="submit">Upload Arquivo</button>
         </form>
-        
       </div>
     </div>
 
@@ -87,7 +87,7 @@
             Confirmar Exclusão?
           </div>
           <button id="btnExcluirSim" type="submit">Sim</button>
-          <button id="btnExcluirNao">Não</button>
+          <button id="btnExcluirNao" onclick="cancelarExclusao()">Não</button>
         </form>
       </div>
     </div>
