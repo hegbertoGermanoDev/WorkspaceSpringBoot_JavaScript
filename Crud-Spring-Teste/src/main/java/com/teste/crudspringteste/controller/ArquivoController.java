@@ -7,9 +7,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.SQLException;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 import javax.sql.rowset.serial.SerialException;
@@ -17,7 +17,6 @@ import javax.sql.rowset.serial.SerialException;
 import com.teste.crudspringteste.dao.ArquivoMapper;
 import com.teste.crudspringteste.model.Arquivo;
 import com.teste.crudspringteste.model.ArquivoVO;
-import com.teste.crudspringteste.repository.ArquivoCustomRepository;
 import com.teste.crudspringteste.repository.ArquivoRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,9 +44,6 @@ public class ArquivoController {
     
     @Autowired
     private ArquivoRepository arquivoRepository;
-
-    @Autowired
-    private ArquivoCustomRepository arquivoCustomRepository;
 
     @Autowired
     ArquivoMapper arquivoMapper;
@@ -85,19 +81,12 @@ public class ArquivoController {
      */
     @PostMapping(path = "/listFiltros")
     public List<Arquivo> listFiltros(@RequestBody ArquivoVO arquivoVO) {
-        SimpleDateFormat formatoData = new SimpleDateFormat("yyyy-MM-dd");
-        String dataInicial = null;
-        String dataFinal = null;
-        if (arquivoVO.getDataInicial() != null && arquivoVO.getDataFinal() != null){
-            dataInicial = formatoData.format(arquivoVO.getDataInicial());
-            dataFinal = formatoData.format(arquivoVO.getDataFinal());
-        }
-        return arquivoCustomRepository.listArquivoByFiltros(arquivoVO.getTipo(), arquivoVO.getNomeArqvuivo(), dataInicial + " 00:00:00", dataFinal + " 23:59:59");
+        return arquivoMapper.listArquivosByFiltro(arquivoVO);
     }
 
     @GetMapping(path = "/getArquivoById")
-    public Arquivo getArqvuivoById(@RequestParam Long id) {
-        return arquivoCustomRepository.getArquivoById(id);
+    public Optional<Arquivo> getArqvuivoById(@RequestParam Long id) {
+        return arquivoRepository.findById(id);
     }
 
     /**
